@@ -48,8 +48,8 @@
             </tr>
         </tbody>
     </table>
-    <script src="Scripts/jquery-2.1.0.min.js"></script>
-    <script src="Scripts/knockout-3.1.0.js"></script>
+    <script src="Scripts/jquery-2.1.1.min.js"></script>
+    <script src="Scripts/knockout-3.2.0.js"></script>
     <script src="Scripts/paging.js"></script>
 </body>
 </html>

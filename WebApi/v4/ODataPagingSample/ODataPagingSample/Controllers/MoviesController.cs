@@ -1,35 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using System.Web.OData;
-using System.Web.OData.Routing;
 using ODataPagingSample.Models;
 
 namespace ODataPagingSample.Controllers
 {
     public class MoviesController : ODataController
     {
-        private MoviesDb db = new MoviesDb();
+        private readonly MoviesDb _db = new MoviesDb();
 
         // GET: odata/Movies
         [EnableQuery(PageSize = 10)]
         public IQueryable<Movie> GetMovies()
         {
-            return db.Movies;
+            return _db.Movies;
         }
 
         // GET: odata/Movies(5)
         [EnableQuery]
         public SingleResult<Movie> GetMovie([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Movies.Where(movie => movie.ID == key));
+            return SingleResult.Create(_db.Movies.Where(movie => movie.ID == key));
         }
 
         // PUT: odata/Movies(5)
@@ -45,11 +39,11 @@ namespace ODataPagingSample.Controllers
                 return BadRequest();
             }
 
-            db.Entry(movie).State = EntityState.Modified;
+            _db.Entry(movie).State = EntityState.Modified;
 
             try
             {
-                db.SaveChanges();
+                _db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -74,8 +68,8 @@ namespace ODataPagingSample.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Movies.Add(movie);
-            db.SaveChanges();
+            _db.Movies.Add(movie);
+            _db.SaveChanges();
 
             return Created(movie);
         }
@@ -89,7 +83,7 @@ namespace ODataPagingSample.Controllers
                 return BadRequest(ModelState);
             }
 
-            Movie movie = db.Movies.Find(key);
+            Movie movie = _db.Movies.Find(key);
             if (movie == null)
             {
                 return NotFound();
@@ -99,7 +93,7 @@ namespace ODataPagingSample.Controllers
 
             try
             {
-                db.SaveChanges();
+                _db.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -119,14 +113,14 @@ namespace ODataPagingSample.Controllers
         // DELETE: odata/Movies(5)
         public IHttpActionResult Delete([FromODataUri] int key)
         {
-            Movie movie = db.Movies.Find(key);
+            Movie movie = _db.Movies.Find(key);
             if (movie == null)
             {
                 return NotFound();
             }
 
-            db.Movies.Remove(movie);
-            db.SaveChanges();
+            _db.Movies.Remove(movie);
+            _db.SaveChanges();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -135,14 +129,14 @@ namespace ODataPagingSample.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool MovieExists(int key)
         {
-            return db.Movies.Count(e => e.ID == key) > 0;
+            return _db.Movies.Count(e => e.ID == key) > 0;
         }
     }
 }

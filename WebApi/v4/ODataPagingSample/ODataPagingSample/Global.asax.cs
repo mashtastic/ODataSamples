@@ -12,7 +12,7 @@ namespace ODataPagingSample
         protected void Application_Start()
         {
             // Creates the model for our Movies entity set
-            ODataConventionModelBuilder modelBuilder = new ODataConventionModelBuilder();
+            var modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntitySet<Movie>("Movies");
             IEdmModel model = modelBuilder.GetEdmModel();
 
